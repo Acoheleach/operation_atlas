@@ -1,0 +1,62 @@
+{
+  "salutations": [
+    {
+      "greeting": "Hola",
+      "language": "Español",
+      "country": "España",
+      "linguisticFamily": "Romance"
+    },
+    {
+      "greeting": "Bonjour",
+      "language": "Français",
+      "country": "France",
+      "linguisticFamily": "Romance"
+    },
+    {
+      "greeting": "Hallo",
+      "language": "Deutsch",
+      "country": "Deutschland",
+      "linguisticFamily": "Germanic"
+    },
+    {
+      "greeting": "Hello",
+      "language": "English",
+      "country": "United Kingdom",
+      "linguisticFamily": "Germanic"
+    },
+    {
+      "greeting": "Ciao",
+      "language": "Italiano",
+      "country": "Italia",
+      "linguisticFamily": "Romance"
+    },
+    {
+      "greeting": "Olá",
+      "language": "Português",
+      "country": "Portugal",
+      "linguisticFamily": "Romance"
+    },
+    {
+      "greeting": "Hej",
+      "language": "Svenska",
+      "country": "Sverige",
+      "linguisticFamily": "Germanic"
+    },
+    {
+      "greeting": "Здравствуй",
+      "language": "Русский",
+      "country": "Россия",
+      "linguisticFamily": "Slavic"
+    }
+  ],
+  "familyMapping": {
+    "Romance": "M",
+    "Germanic": "O",
+    "Slavic": "N",
+    "Baltic": "D",
+    "Celtic": "E"
+  },
+  "targetWord": "MONDE",
+  "hint": "Classez les pays par ordre alphabétique, puis associez chaque famille à sa lettre",
+  "decoy": "Le mot 'HOLA' semble correct mais c'est un faux-ami"
+}

@@ -1,0 +1,81 @@
+{
+  "currencies": [
+    {
+      "country": "Maroc",
+      "currency": "Dirham marocain",
+      "code": "MAD",
+      "flagEmoji": "🇲🇦",
+      "exchangeRateToEUR": 0.091
+    },
+    {
+      "country": "Sénégal",
+      "currency": "Franc CFA",
+      "code": "XOF",
+      "flagEmoji": "🇸🇳",
+      "exchangeRateToEUR": 0.0015
+    },
+    {
+      "country": "Kenya",
+      "currency": "Shilling kenyan",
+      "code": "KES",
+      "flagEmoji": "🇰🇪",
+      "exchangeRateToEUR": 0.0069
+    },
+    {
+      "country": "Afrique du Sud",
+      "currency": "Rand",
+      "code": "ZAR",
+      "flagEmoji": "🇿🇦",
+      "exchangeRateToEUR": 0.048
+    },
+    {
+      "country": "Égypte",
+      "currency": "Livre égyptienne",
+      "code": "EGP",
+      "flagEmoji": "🇪🇬",
+      "exchangeRateToEUR": 0.019
+    }
+  ],
+  "transactions": [
+    {
+      "from": "Maroc",
+      "to": "Sénégal",
+      "amount": 1000,
+      "description": "Achat d'artisanat à Dakar"
+    },
+    {
+      "from": "Sénégal",
+      "to": "Kenya",
+      "amount": "RESULT_1",
+      "description": "Paiement safari à Nairobi"
+    },
+    {
+      "from": "Kenya",
+      "to": "Afrique du Sud",
+      "amount": "RESULT_2",
+      "description": "Location véhicule au Cap"
+    },
+    {
+      "from": "Afrique du Sud",
+      "to": "Égypte",
+      "amount": "RESULT_3",
+      "description": "Visite pyramides du Caire"
+    }
+  ],
+  "startingAmount": 1000,
+  "startingCurrency": "MAD",
+  "finalCurrency": "EGP",
+  "expectedFinalAmount": 9700,
+  "hint": "Convertissez étape par étape : MAD → EUR → XOF → EUR → KES → EUR → ZAR → EUR → EGP. Arrondissez à l'entier le plus proche à chaque étape.",
+  "solution": {
+    "step1": "1000 MAD = 91 EUR",
+    "step2": "91 EUR = 60667 XOF",
+    "step3": "60667 XOF = 91 EUR",
+    "step4": "91 EUR = 13188 KES",
+    "step5": "13188 KES = 91 EUR",
+    "step6": "91 EUR = 1896 ZAR",
+    "step7": "1896 ZAR = 91 EUR",
+    "step8": "91 EUR = 4789 EGP",
+    "note": "Code attendu: 4789"
+  }
+}
