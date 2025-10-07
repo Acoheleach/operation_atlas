@@ -1,26 +1,28 @@
-import React, { useState, useEffect } from 'react';
-import { useGameStore } from '../store/gameStore';
+import React, { useEffect, useState } from "react";
+import { useGameStore } from "../store/gameStore";
 
 // Mapping des continents pour l'affichage
 const continentInfo: Record<string, { emoji: string; name: string }> = {
-  EUROPE: { emoji: '🇪🇺', name: 'Europe' },
-  ASIA: { emoji: '🌏', name: 'Asie' },
-  AMERICAS: { emoji: '✈️', name: 'Amériques' },
-  AFRICA: { emoji: '🌍', name: 'Afrique' },
-  OCEANIA: { emoji: '🏝️', name: 'Océanie' },
-  ANTARCTICA: { emoji: '🧊', name: 'Antarctique' }
+  EUROPE: { emoji: "🇪🇺", name: "Europe" },
+  ASIA: { emoji: "🌏", name: "Asie" },
+  AMERICAS: { emoji: "✈️", name: "Amériques" },
+  AFRICA: { emoji: "🌍", name: "Afrique" },
+  OCEANIA: { emoji: "🏝️", name: "Océanie" },
+  ANTARCTICA: { emoji: "🧊", name: "Antarctique" },
 };
 
 export const Final: React.FC = () => {
   const { room, submitFinal } = useGameStore();
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
   const [timeLeft, setTimeLeft] = useState(30);
 
   useEffect(() => {
     if (!room?.finalStartedAt) return;
 
     const interval = setInterval(() => {
-      const elapsed = Math.floor((Date.now() - new Date(room.finalStartedAt).getTime()) / 1000);
+      const elapsed = Math.floor(
+        (Date.now() - new Date(room.finalStartedAt).getTime()) / 1000
+      );
       const remaining = Math.max(0, 30 - elapsed);
       setTimeLeft(remaining);
 
@@ -44,176 +46,422 @@ export const Final: React.FC = () => {
   };
 
   return (
-    <div style={{
-      background: 'linear-gradient(135deg, #1a1d2e 0%, #0f1117 100%)',
-      border: '4px solid #FB7185',
-      borderRadius: 'var(--radius)',
-      padding: '2rem',
-      boxShadow: '0 0 40px rgba(251, 113, 133, 0.5)',
-      animation: timeLeft < 10 ? 'shake 0.5s infinite' : 'none'
-    }}>
-      {/* Header Terminal */}
-      <div style={{
-        background: 'linear-gradient(135deg, #FB7185 0%, #DC2626 100%)',
-        padding: '1rem',
-        borderRadius: '10px',
-        marginBottom: '1.5rem',
-        border: '3px solid rgba(0, 0, 0, 0.3)',
-        boxShadow: '0 8px 0 rgba(0, 0, 0, 0.3)'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: 'white' }}>
-          <div>
-            <div style={{ fontSize: '0.75rem', opacity: 0.9, marginBottom: '0.25rem' }}>
-              &gt; TERMINAL SÉCURISÉ S.H.A.D.O.W.
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: 900, letterSpacing: '2px' }}>
-              ⚠️ DÉSACTIVATION VIRUS
-            </div>
-          </div>
-          <div style={{
-            fontSize: '3rem',
-            fontWeight: 900,
-            color: timeLeft < 10 ? '#FFF' : '#FCD34D',
-            textShadow: '0 0 20px currentColor',
-            animation: timeLeft < 10 ? 'pulse 0.5s infinite' : 'none'
-          }}>
-            {timeLeft}s
-          </div>
-        </div>
-      </div>
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        padding: "24px",
+        fontFamily: '"Poppins", sans-serif',
+        color: "#f8fafc",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        .dashboard-card {
+          background: rgba(30, 41, 59, 0.9);
+          border: 1px solid rgba(71, 85, 105, 0.5);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .critical-card {
+          background: rgba(220, 38, 38, 0.1);
+          border: 1px solid rgba(220, 38, 38, 0.5);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          backdrop-filter: blur(10px);
+        }
+        
+        .success-card {
+          background: rgba(16, 185, 129, 0.1);
+          border: 1px solid rgba(16, 185, 129, 0.5);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          backdrop-filter: blur(10px);
+        }
+        
+        .primary-button {
+          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+          border: none;
+          border-radius: 8px;
+          padding: 16px 32px;
+          color: white;
+          font-weight: 600;
+          font-size: 16px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        .primary-button:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+        }
+        
+        .primary-button:disabled {
+          background: #475569;
+          cursor: not-allowed;
+          transform: none;
+        }
+        
+        .terminal-input {
+          background: rgba(15, 23, 42, 0.8);
+          border: 1px solid rgba(59, 130, 246, 0.5);
+          border-radius: 8px;
+          padding: 16px;
+          color: #f8fafc;
+          font-family: 'monospace', 'Courier New';
+          font-size: 18px;
+          font-weight: 600;
+          letter-spacing: 2px;
+          width: 100%;
+          outline: none;
+          transition: all 0.3s ease;
+        }
+        
+        .terminal-input:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        .terminal-input:disabled {
+          background: rgba(71, 85, 105, 0.5);
+          border-color: rgba(71, 85, 105, 0.5);
+          color: #94a3b8;
+        }
+        
+        .countdown-critical {
+          animation: pulse 1s ease-in-out infinite;
+          color: #ef4444;
+        }
+        
+        .server-tag {
+          background: rgba(16, 185, 129, 0.2);
+          border: 1px solid rgba(16, 185, 129, 0.5);
+          border-radius: 8px;
+          padding: 12px 16px;
+          color: #10b981;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        
+        .grid-3-col {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 16px;
+        }
+        
+        .flex-center {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .flex-between {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        
+        .text-success { color: #10b981; }
+        .text-warning { color: #f59e0b; }
+        .text-danger { color: #ef4444; }
+        .text-info { color: #3b82f6; }
+        .text-muted { color: #94a3b8; }
+        
+        @media (max-width: 768px) {
+          .grid-3-col {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
 
-      {/* Statut nœuds infiltrés */}
-      <div style={{
-        background: 'rgba(134, 239, 172, 0.1)',
-        border: '2px solid #86EFAC',
-        borderRadius: '10px',
-        padding: '1rem',
-        marginBottom: '1.5rem'
-      }}>
-        <div style={{ fontSize: '0.875rem', color: '#86EFAC', marginBottom: '0.75rem', fontWeight: 700 }}>
-          ✓ NŒUDS INFILTRÉS :
-        </div>
-        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
-          {drawnContinents.map((continent: string) => {
-            const info = continentInfo[continent];
-            return (
-              <div key={continent} style={{
-                background: 'rgba(134, 239, 172, 0.2)',
-                padding: '0.5rem 1rem',
-                borderRadius: '8px',
-                border: '2px solid #86EFAC',
-                color: 'white',
-                fontWeight: 700,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}>
-                <span style={{ fontSize: '1.5rem' }}>{info.emoji}</span>
-                <span>{info.name}</span>
+      <div style={{ maxWidth: "800px", width: "100%" }}>
+        {/* Header Principal */}
+        <div className="critical-card">
+          <div className="flex-between">
+            <div>
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "#ef4444",
+                  fontWeight: "600",
+                  marginBottom: "8px",
+                }}
+              >
+                TERMINAL DE DÉSACTIVATION
               </div>
-            );
-          })}
-        </div>
-      </div>
+              <h1
+                style={{
+                  fontSize: "2rem",
+                  fontWeight: "800",
+                  margin: "0",
+                  background:
+                    "linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)",
+                  backgroundClip: "text",
+                  WebkitBackgroundClip: "text",
+                  color: "transparent",
+                  textTransform: "uppercase",
+                  letterSpacing: "1px",
+                }}
+              >
+                ALERTE VIRUS ATLAS-KILLER
+              </h1>
+            </div>
 
-      {/* Message d'alerte */}
-      <div style={{
-        background: 'linear-gradient(135deg, rgba(251, 113, 133, 0.2) 0%, rgba(220, 38, 38, 0.2) 100%)',
-        border: '3px solid #FB7185',
-        borderRadius: '10px',
-        padding: '1.5rem',
-        marginBottom: '1.5rem',
-        color: 'white'
-      }}>
-        <div style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontWeight: 700 }}>
-          🚨 ALERTE CRITIQUE
+            <div
+              style={{
+                background: "rgba(239, 68, 68, 0.2)",
+                border: "1px solid rgba(239, 68, 68, 0.5)",
+                borderRadius: "8px",
+                padding: "16px 20px",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "#ef4444",
+                  fontWeight: "600",
+                  marginBottom: "4px",
+                }}
+              >
+                TEMPS RESTANT
+              </div>
+              <div
+                style={{
+                  fontSize: "2.5rem",
+                  fontWeight: "800",
+                  fontFamily: "monospace",
+                  color: timeLeft < 10 ? "#ef4444" : "#f59e0b",
+                }}
+              >
+                {timeLeft}s
+              </div>
+            </div>
+          </div>
         </div>
-        <p style={{ lineHeight: '1.6', margin: 0 }}>
-          Le virus <strong>ATLAS-KILLER</strong> est prêt à s'activer !
-          <br />
-          Entrez le <strong style={{ color: '#FCD34D' }}>code de désactivation final</strong> maintenant !
-        </p>
-      </div>
 
-      {/* Console input */}
-      <div style={{
-        background: '#000',
-        border: '3px solid #38B6FF',
-        borderRadius: '10px',
-        padding: '1.5rem',
-        fontFamily: 'monospace',
-        marginBottom: '1rem'
-      }}>
-        <div style={{ color: '#86EFAC', marginBottom: '1rem', fontSize: '0.875rem' }}>
-          &gt; root@shadow-central:~# disable_virus --code=
-        </div>
-        <form onSubmit={handleSubmit} style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <div style={{ color: '#38B6FF', fontSize: '1.2rem' }}>&gt;</div>
-          <input
-            type="text"
-            value={answer}
-            onChange={(e) => setAnswer(e.target.value.toUpperCase())}
-            placeholder="CODE DÉSACTIVATION..."
-            disabled={timeLeft === 0}
+        {/* Serveurs Infiltrés */}
+        <div className="success-card">
+          <h2
             style={{
-              flex: 1,
-              background: 'transparent',
-              border: 'none',
-              color: '#FFF',
-              fontSize: '1.5rem',
-              fontWeight: 900,
-              letterSpacing: '3px',
-              outline: 'none',
-              fontFamily: 'monospace',
-              padding: '0.5rem'
-            }}
-            autoFocus
-            aria-label="Code de désactivation"
-          />
-          <button
-            type="submit"
-            disabled={!answer.trim() || timeLeft === 0}
-            style={{
-              background: timeLeft === 0 ? '#64748B' : 'linear-gradient(135deg, #86EFAC 0%, #059669 100%)',
-              padding: '0.75rem 2rem',
-              fontSize: '1.2rem',
-              fontWeight: 900,
-              border: '3px solid rgba(0, 0, 0, 0.3)',
-              boxShadow: timeLeft === 0 ? 'none' : '0 6px 0 rgba(0, 0, 0, 0.3)',
-              animation: (!answer.trim() || timeLeft === 0) ? 'none' : 'pulse 2s infinite'
+              fontSize: "1.25rem",
+              fontWeight: "600",
+              margin: "0 0 16px 0",
+              color: "#10b981",
+              display: "flex",
+              alignItems: "center",
+              gap: "8px",
             }}
           >
-            {timeLeft === 0 ? '⏰ EXPIRÉ' : '🔓 DÉSACTIVER'}
-          </button>
-        </form>
+            🛡️ SERVEURS INFILTRÉS
+          </h2>
+
+          <div className="grid-3-col">
+            {drawnContinents.map((continent: string) => {
+              const info = continentInfo[continent];
+              return (
+                <div key={continent} className="server-tag">
+                  <span style={{ fontSize: "1.5rem" }}>{info.emoji}</span>
+                  <span>{info.name}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Message d'Alerte */}
+        <div className="critical-card">
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "12px",
+              marginBottom: "16px",
+            }}
+          >
+            <div
+              style={{
+                width: "32px",
+                height: "32px",
+                background: "#ef4444",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                fontSize: "18px",
+              }}
+            >
+              ⚠️
+            </div>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                fontWeight: "600",
+                margin: 0,
+                color: "#f8fafc",
+              }}
+            >
+              ALERTE CRITIQUE
+            </h2>
+          </div>
+
+          <div style={{ color: "#cbd5e1", lineHeight: "1.6" }}>
+            <p style={{ marginBottom: "12px" }}>
+              Le virus{" "}
+              <strong style={{ color: "#ef4444" }}>ATLAS-KILLER</strong> est sur
+              le point de s'activer et menace d'effacer les archives culturelles
+              mondiales.
+            </p>
+            <p style={{ margin: 0 }}>
+              Entrez le{" "}
+              <strong style={{ color: "#f59e0b" }}>
+                code de désactivation final
+              </strong>{" "}
+              pour neutraliser la menace.
+            </p>
+          </div>
+        </div>
+
+        {/* Interface de Désactivation */}
+        <div className="dashboard-card">
+          <div
+            style={{
+              background: "rgba(15, 23, 42, 0.8)",
+              borderRadius: "8px",
+              padding: "20px",
+              border: "1px solid rgba(71, 85, 105, 0.5)",
+            }}
+          >
+            <div
+              style={{
+                color: "#10b981",
+                fontFamily: "monospace",
+                fontSize: "14px",
+                marginBottom: "16px",
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span style={{ color: "#3b82f6" }}>root@shadow-central</span>
+              <span style={{ color: "#94a3b8" }}>:</span>
+              <span style={{ color: "#f59e0b" }}>~</span>
+              <span style={{ color: "#94a3b8" }}>$</span>
+              <span> disable_virus --code=</span>
+            </div>
+
+            <form
+              onSubmit={handleSubmit}
+              style={{ display: "flex", gap: "12px", alignItems: "stretch" }}
+            >
+              <div
+                style={{
+                  color: "#3b82f6",
+                  fontFamily: "monospace",
+                  fontSize: "18px",
+                  fontWeight: "600",
+                  display: "flex",
+                  alignItems: "center",
+                  padding: "0 8px",
+                }}
+              >
+                &gt;
+              </div>
+
+              <input
+                type="text"
+                value={answer}
+                onChange={(e) => setAnswer(e.target.value.toUpperCase())}
+                placeholder="SAISIR LE CODE..."
+                disabled={timeLeft === 0}
+                className="terminal-input"
+                autoFocus
+                aria-label="Code de désactivation du virus"
+                style={{
+                  textTransform: "uppercase",
+                  textAlign: "center",
+                }}
+              />
+
+              <button
+                type="submit"
+                disabled={!answer.trim() || timeLeft === 0}
+                className="primary-button"
+                style={{
+                  whiteSpace: "nowrap",
+                  minWidth: "140px",
+                }}
+              >
+                {timeLeft === 0 ? "⏰ EXPIRÉ" : "🔓 DÉSACTIVER"}
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* Message d'Expiration */}
+        {timeLeft === 0 && (
+          <div className="critical-card">
+            <div style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "3rem", marginBottom: "16px" }}>💥</div>
+              <h3
+                style={{
+                  fontSize: "1.5rem",
+                  fontWeight: "600",
+                  color: "#ef4444",
+                  margin: "0 0 8px 0",
+                }}
+              >
+                TEMPS ÉCOULÉ
+              </h3>
+              <p style={{ color: "#cbd5e1", margin: 0 }}>
+                Le virus ATLAS-KILLER a été activé et a compromis les archives
+                culturelles.
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* Indice */}
+        {timeLeft > 0 && (
+          <div className="dashboard-card" style={{ textAlign: "center" }}>
+            <div
+              style={{
+                color: "#3b82f6",
+                fontSize: "0.875rem",
+                fontStyle: "italic",
+              }}
+            >
+              💡 <strong>Indice stratégique :</strong> Le code final est basé
+              sur l'analyse des serveurs infiltrés
+            </div>
+          </div>
+        )}
+
+        {/* Footer */}
+        <div style={{ textAlign: "center", marginTop: "32px" }}>
+          <p style={{ fontSize: "0.75rem", color: "#64748b" }}>
+            Terminal S.H.A.D.O.W. • Système de Désactivation d'Urgence
+          </p>
+        </div>
       </div>
-
-      {timeLeft === 0 && (
-        <div style={{
-          padding: '1.5rem',
-          background: 'linear-gradient(135deg, #DC2626 0%, #991B1B 100%)',
-          borderRadius: '10px',
-          color: 'white',
-          textAlign: 'center',
-          fontSize: '1.2rem',
-          fontWeight: 900,
-          border: '3px solid rgba(0, 0, 0, 0.3)',
-          boxShadow: '0 8px 0 rgba(0, 0, 0, 0.3)'
-        }}>
-          💥 TEMPS ÉCOULÉ ! Le virus ATLAS-KILLER a été activé...
-        </div>
-      )}
-
-      {timeLeft > 0 && (
-        <div style={{
-          textAlign: 'center',
-          fontSize: '0.875rem',
-          color: '#BAE6FD',
-          fontStyle: 'italic'
-        }}>
-          💡 Indice : Le code final est basé sur les continents infiltrés
-        </div>
-      )}
     </div>
   );
 };

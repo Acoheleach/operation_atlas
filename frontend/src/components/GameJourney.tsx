@@ -1,27 +1,27 @@
-import React, { useState, useEffect } from 'react';
-import { useGameStore } from '../store/gameStore';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useGameStore } from '../store/gameStore';
 import { GameStage } from '../types/game';
-import { PuzzleEurope } from './PuzzleEurope';
-import { PuzzleAsia } from './PuzzleAsia';
-import { PuzzleAmericas } from './PuzzleAmericas';
-import { PuzzleAfrica } from './PuzzleAfrica';
-import { PuzzleOceania } from './PuzzleOceania';
-import { PuzzleAntarctica } from './PuzzleAntarctica';
-import { Meta } from './Meta';
 import { Final } from './Final';
+import { Meta } from './Meta';
+import { PuzzleAfrica } from './PuzzleAfrica';
+import { PuzzleAmericas } from './PuzzleAmericas';
+import { PuzzleAntarctica } from './PuzzleAntarctica';
+import { PuzzleAsia } from './PuzzleAsia';
+import { PuzzleEurope } from './PuzzleEurope';
+import { PuzzleOceania } from './PuzzleOceania';
 
 type Destination = 'EUROPE' | 'ASIA' | 'AMERICAS' | 'AFRICA' | 'OCEANIA' | 'ANTARCTICA' | 'META' | 'FINAL';
 
 const allContinentInfo: Record<string, { name: string; emoji: string; color: string; bg: string }> = {
-  EUROPE: { name: 'Europe', emoji: '🇪🇺', color: '#7DD3FC', bg: 'linear-gradient(135deg, #7DD3FC 0%, #0C4A6E 100%)' },
-  ASIA: { name: 'Asie', emoji: '🌏', color: '#86EFAC', bg: 'linear-gradient(135deg, #86EFAC 0%, #064E3B 100%)' },
-  AMERICAS: { name: 'Amériques', emoji: '✈️', color: '#FCD34D', bg: 'linear-gradient(135deg, #FCD34D 0%, #92400E 100%)' },
-  AFRICA: { name: 'Afrique', emoji: '🌍', color: '#FDBA74', bg: 'linear-gradient(135deg, #FDBA74 0%, #9A3412 100%)' },
-  OCEANIA: { name: 'Océanie', emoji: '🏝️', color: '#7DD3FC', bg: 'linear-gradient(135deg, #7DD3FC 0%, #164E63 100%)' },
-  ANTARCTICA: { name: 'Antarctique', emoji: '🧊', color: '#A5F3FC', bg: 'linear-gradient(135deg, #A5F3FC 0%, #155E75 100%)' },
-  META: { name: 'Synthèse', emoji: '🧩', color: '#86EFAC', bg: 'linear-gradient(135deg, #86EFAC 0%, #7DD3FC 100%)' },
-  FINAL: { name: 'Mission Finale', emoji: '🎯', color: '#FCD34D', bg: 'linear-gradient(135deg, #FCD34D 0%, #7DD3FC 100%)' }
+  EUROPE: { name: 'Europe', emoji: '🇪🇺', color: '#2563eb', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  ASIA: { name: 'Asie', emoji: '🌏', color: '#059669', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  AMERICAS: { name: 'Amériques', emoji: '✈️', color: '#d97706', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  AFRICA: { name: 'Afrique', emoji: '🌍', color: '#dc2626', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  OCEANIA: { name: 'Océanie', emoji: '🏝️', color: '#7c3aed', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  ANTARCTICA: { name: 'Antarctique', emoji: '🧊', color: '#0891b2', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  META: { name: 'Synthèse', emoji: '🧩', color: '#8b5cf6', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
+  FINAL: { name: 'Mission Finale', emoji: '🎯', color: '#dc2626', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' }
 };
 
 export const GameJourney: React.FC = () => {
@@ -46,7 +46,6 @@ export const GameJourney: React.FC = () => {
   useEffect(() => {
     if (!room || !room.draw || room.draw.length === 0) return;
 
-    // Déterminer la destination actuelle
     if (room.stage === GameStage.META) {
       if (currentDestination !== 'META') {
         triggerTransition('META');
@@ -56,13 +55,10 @@ export const GameJourney: React.FC = () => {
         triggerTransition('FINAL');
       }
     } else if (room.stage === GameStage.PLAY) {
-      // Aller à la première destination non résolue parmi les continents tirés
       const drawnContinents = room.draw as Destination[];
-
       for (let i = 0; i < drawnContinents.length; i++) {
         const continent = drawnContinents[i];
         const continentKey = continent.toLowerCase().substring(0, 2);
-
         if (!room.solved[continentKey]) {
           if (currentDestination !== continent) {
             if (currentDestination === null) {
@@ -102,13 +98,6 @@ export const GameJourney: React.FC = () => {
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  const getTimerClass = () => {
-    if (room.timerSec < 60) return 'timer danger';
-    if (room.timerSec < 300) return 'timer warning';
-    return 'timer';
-  };
-
-  // Build destinations array dynamically based on room.draw
   const destinations = [
     ...(room.draw || []).map(continent => ({
       id: continent,
@@ -119,14 +108,11 @@ export const GameJourney: React.FC = () => {
   ];
 
   const currentDest = allContinentInfo[currentDestination];
-
-  // Count completed puzzles from the drawn continents
   const completedCount = (room.draw || []).filter((continent: string) => {
     const key = continent.toLowerCase().substring(0, 2);
     return room.solved[key];
   }).length;
 
-  // Calculate current position in journey (1-5)
   let currentPosition = completedCount + 1;
   if (currentDestination === 'META') {
     currentPosition = 4;
@@ -137,11 +123,144 @@ export const GameJourney: React.FC = () => {
   return (
     <div style={{
       minHeight: '100vh',
-      background: currentDest.bg,
-      transition: 'background 1s ease',
-      padding: '2rem'
+      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
+      padding: '24px',
+      fontFamily: '"Poppins", sans-serif',
+      color: '#f8fafc'
     }}>
-      {/* Transition overlay */}
+      
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
+        
+        .dashboard-card {
+          background: rgba(30, 41, 59, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.5);
+          border-radius: 12px;
+          padding: 24px;
+          margin-bottom: 24px;
+          backdrop-filter: blur(10px);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .server-tag {
+          background: rgba(30, 41, 59, 0.6);
+          border: 1px solid rgba(71, 85, 105, 0.3);
+          border-radius: 8px;
+          padding: 12px 16px;
+          color: #f8fafc;
+          font-weight: 600;
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          transition: all 0.3s ease;
+        }
+        
+        .server-tag:hover {
+          border-color: #3b82f6;
+          transform: translateY(-2px);
+        }
+        
+        .primary-button {
+          background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+          border: none;
+          border-radius: 8px;
+          padding: 12px 20px;
+          color: white;
+          font-weight: 600;
+          font-size: 14px;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          font-family: 'Poppins', sans-serif;
+        }
+        
+        .primary-button:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(37, 99, 235, 0.3);
+        }
+        
+        .chat-input {
+          background: rgba(15, 23, 42, 0.8);
+          border: 1px solid rgba(71, 85, 105, 0.5);
+          border-radius: 8px;
+          padding: 12px 16px;
+          color: #f8fafc;
+          font-family: 'Poppins', sans-serif;
+          width: 100%;
+          outline: none;
+          transition: all 0.3s ease;
+        }
+        
+        .chat-input:focus {
+          border-color: #3b82f6;
+          box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+        
+        .progress-step {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.25rem;
+          border: 2px solid rgba(71, 85, 105, 0.5);
+          transition: all 0.3s ease;
+          position: relative;
+        }
+        
+        .progress-step.active {
+          border-color: #3b82f6;
+          box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+          transform: scale(1.1);
+        }
+        
+        .progress-step.completed {
+          background: #10b981;
+          border-color: #10b981;
+        }
+        
+        .timer-critical {
+          animation: pulse 1s ease-in-out infinite;
+          color: #ef4444;
+        }
+        
+        @keyframes pulse {
+          0%, 100% { opacity: 1; }
+          50% { opacity: 0.7; }
+        }
+        
+        .flex-between {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+        }
+        
+        .flex-center {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        
+        .text-success { color: #10b981; }
+        .text-warning { color: #f59e0b; }
+        .text-danger { color: #ef4444; }
+        .text-info { color: #3b82f6; }
+        .text-muted { color: #94a3b8; }
+        
+        .grid-2-col {
+          display: grid;
+          grid-template-columns: 1fr 350px;
+          gap: 24px;
+        }
+        
+        @media (max-width: 1024px) {
+          .grid-2-col {
+            grid-template-columns: 1fr;
+          }
+        }
+      `}</style>
+
+      {/* Transition Overlay */}
       {showTransition && nextDestination && (
         <div style={{
           position: 'fixed',
@@ -149,60 +268,86 @@ export const GameJourney: React.FC = () => {
           left: 0,
           right: 0,
           bottom: 0,
-          background: 'rgba(0, 0, 0, 0.9)',
+          background: 'rgba(15, 23, 42, 0.95)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
           zIndex: 9999,
-          animation: 'fadeIn 0.5s ease-in-out'
+          fontFamily: '"Poppins", sans-serif'
         }}>
           <div style={{ textAlign: 'center', color: 'white' }}>
-            <div style={{ fontSize: '5rem', marginBottom: '1rem' }}>
+            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
               {allContinentInfo[nextDestination]?.emoji}
             </div>
-            <h2 style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>
-              En route vers...
+            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#94a3b8' }}>
+              Transition de mission
             </h2>
-            <h1 style={{ fontSize: '3rem', fontWeight: 'bold' }}>
+            <h1 style={{ 
+              fontSize: '2.5rem', 
+              fontWeight: '700',
+              background: 'linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)',
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              color: 'transparent'
+            }}>
               {allContinentInfo[nextDestination]?.name}
             </h1>
           </div>
         </div>
       )}
 
-      <div className="container" style={{ maxWidth: '1400px' }}>
-        {/* Header avec progression */}
-        <div className="card" style={{ marginBottom: '2rem', background: 'rgba(255, 255, 255, 0.95)' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+        
+        {/* Header avec Progression */}
+        <div className="dashboard-card">
+          <div className="flex-between" style={{ flexWrap: 'wrap', gap: '24px' }}>
             <div>
-              <h1 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <h1 style={{
+                fontSize: '1.75rem',
+                fontWeight: '700',
+                margin: '0 0 8px 0',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px'
+              }}>
                 <span style={{ fontSize: '2rem' }}>{currentDest.emoji}</span>
                 {currentDest.name}
               </h1>
-              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-dim)' }}>
-                Destination {currentPosition} / 5
+              <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+                Phase {currentPosition} sur 5 • Opération Atlas
               </div>
             </div>
 
-            <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '0.875rem', color: 'var(--color-text-dim)', marginBottom: '0.5rem' }}>
-                Temps restant
+            {/* Timer */}
+            <div style={{
+              background: 'rgba(15, 23, 42, 0.6)',
+              border: '1px solid rgba(71, 85, 105, 0.5)',
+              borderRadius: '8px',
+              padding: '16px 20px',
+              textAlign: 'center'
+            }}>
+              <div style={{ fontSize: '0.875rem', color: '#94a3b8', fontWeight: '600', marginBottom: '4px' }}>
+                TEMPS RESTANT
               </div>
-              <div className={getTimerClass()} aria-live="polite" aria-atomic="true">
+              <div style={{ 
+                fontSize: '1.75rem', 
+                fontWeight: '700',
+                fontFamily: 'monospace',
+                color: room.timerSec < 60 ? '#ef4444' : room.timerSec < 300 ? '#f59e0b' : '#10b981'
+              }}>
                 {formatTime(room.timerSec)}
               </div>
             </div>
 
-            {/* Itinéraire */}
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            {/* Barre de Progression */}
+            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
               {destinations.map((dest, idx) => {
-                // Déterminer si cette destination est complétée
                 let isCompleted = false;
+                let isActive = currentDestination === dest.id;
+                
                 if (dest.id === 'META' || dest.id === 'FINAL') {
-                  // META/FINAL ne sont jamais "complétés" dans l'itinéraire
                   isCompleted = false;
                 } else {
-                  // C'est un continent, vérifier s'il est résolu
                   const continentKey = dest.id.toLowerCase().substring(0, 2);
                   isCompleted = room.solved[continentKey] || false;
                 }
@@ -210,22 +355,12 @@ export const GameJourney: React.FC = () => {
                 return (
                   <div
                     key={dest.id}
-                    style={{
-                      width: '50px',
-                      height: '50px',
-                      borderRadius: '50%',
-                      background: currentDestination === dest.id ? dest.color :
-                                 (isCompleted ? 'var(--color-success)' : 'var(--color-border)'),
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontSize: '1.5rem',
-                      border: currentDestination === dest.id ? '3px solid white' : 'none',
-                      boxShadow: currentDestination === dest.id ? '0 0 20px rgba(0,0,0,0.3)' : 'none',
-                      transition: 'all 0.3s ease',
-                      position: 'relative'
-                    }}
+                    className={`progress-step ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
                     title={dest.name}
+                    style={{
+                      background: isCompleted ? '#10b981' : isActive ? dest.color : 'transparent',
+                      color: isCompleted ? 'white' : isActive ? 'white' : '#94a3b8'
+                    }}
                   >
                     {isCompleted ? '✓' : dest.emoji}
                   </div>
@@ -235,8 +370,8 @@ export const GameJourney: React.FC = () => {
           </div>
         </div>
 
-        {/* Contenu principal */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 350px', gap: '2rem' }}>
+        {/* Contenu Principal */}
+        <div className="grid-2-col">
           <div>
             {currentDestination === 'EUROPE' && <PuzzleEurope />}
             {currentDestination === 'ASIA' && <PuzzleAsia />}
@@ -248,63 +383,104 @@ export const GameJourney: React.FC = () => {
             {currentDestination === 'FINAL' && <Final />}
           </div>
 
-          {/* Sidebar avec chat et équipe */}
+          {/* Sidebar */}
           <div>
-            <div className="card" style={{ marginBottom: '1rem', background: 'rgba(255, 255, 255, 0.95)' }}>
-              <h3 style={{ fontSize: '1rem', marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                👥 Équipe ({room.players.length})
+            {/* Équipe */}
+            <div className="dashboard-card">
+              <h3 style={{
+                fontSize: '1.125rem',
+                fontWeight: '600',
+                margin: '0 0 16px 0',
+                color: '#f8fafc',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                👥 ÉQUIPE ({room.players.length}/4)
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {room.players.map((player) => (
                   <div
                     key={player.id}
+                    className="server-tag"
                     style={{
-                      padding: '0.5rem',
-                      background: player.connected ? 'var(--color-success)' : 'var(--color-border)',
-                      borderRadius: 'var(--radius)',
-                      fontSize: '0.875rem',
-                      opacity: player.connected ? 1 : 0.5
+                      background: player.connected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(71, 85, 105, 0.3)',
+                      borderColor: player.connected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(71, 85, 105, 0.5)',
+                      opacity: player.connected ? 1 : 0.6
                     }}
                   >
+                    <div style={{
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '50%',
+                      background: player.connected ? '#10b981' : '#64748b',
+                      marginRight: '8px'
+                    }} />
                     {player.pseudo}
+                    {!player.connected && (
+                      <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#94a3b8' }}>
+                        hors ligne
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="card" style={{ background: 'rgba(255, 255, 255, 0.95)' }}>
-              <h3 style={{ fontSize: '1rem', marginBottom: '1rem' }}>💬 Chat d'équipe</h3>
+            {/* Chat */}
+            <div className="dashboard-card">
+              <h3 style={{
+                fontSize: '1.125rem',
+                fontWeight: '600',
+                margin: '0 0 16px 0',
+                color: '#f8fafc',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px'
+              }}>
+                💬 COMMUNICATION
+              </h3>
+              
               <div
                 style={{
                   height: '300px',
                   overflowY: 'auto',
-                  background: 'var(--color-bg)',
-                  padding: '1rem',
-                  borderRadius: 'var(--radius)',
-                  marginBottom: '1rem'
+                  background: 'rgba(15, 23, 42, 0.6)',
+                  border: '1px solid rgba(71, 85, 105, 0.3)',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  marginBottom: '16px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '12px'
                 }}
                 role="log"
                 aria-live="polite"
               >
                 {chatMessages.map((msg, i) => (
-                  <div key={i} style={{ marginBottom: '0.5rem', fontSize: '0.875rem' }}>
-                    <strong style={{ color: 'var(--color-primary)' }}>{msg.pseudo}:</strong>{' '}
-                    {msg.message}
+                  <div key={i} style={{ fontSize: '0.875rem' }}>
+                    <strong style={{ color: '#3b82f6' }}>{msg.pseudo}:</strong>{' '}
+                    <span style={{ color: '#cbd5e1' }}>{msg.message}</span>
                   </div>
                 ))}
               </div>
 
-              <form onSubmit={handleSendChat} style={{ display: 'flex', gap: '0.5rem' }}>
+              <form onSubmit={handleSendChat} style={{ display: 'flex', gap: '8px' }}>
                 <input
                   type="text"
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Message..."
+                  placeholder="Envoyer un message..."
                   maxLength={200}
-                  style={{ flex: 1, fontSize: '0.875rem', padding: '0.5rem' }}
+                  className="chat-input"
                   aria-label="Message de chat"
                 />
-                <button type="submit" disabled={!chatInput.trim()} style={{ padding: '0.5rem 1rem' }}>
+                <button 
+                  type="submit" 
+                  disabled={!chatInput.trim()} 
+                  className="primary-button"
+                  style={{ minWidth: '60px' }}
+                >
                   →
                 </button>
               </form>
@@ -315,28 +491,54 @@ export const GameJourney: React.FC = () => {
 
       {/* Notifications */}
       {notification && (
-        <div className="notification" role="alert">
+        <div style={{
+          position: 'fixed',
+          top: '24px',
+          right: '24px',
+          background: 'rgba(16, 185, 129, 0.9)',
+          color: 'white',
+          padding: '16px 20px',
+          borderRadius: '8px',
+          border: '1px solid rgba(16, 185, 129, 0.5)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 1000,
+          animation: 'slideInRight 0.3s ease-out'
+        }} role="alert">
           {notification}
         </div>
       )}
 
       {error && (
-        <div className="notification error" role="alert">
-          {error}
-          <button
-            onClick={() => setError(null)}
-            style={{
-              background: 'transparent',
-              border: 'none',
-              color: 'white',
-              float: 'right',
-              cursor: 'pointer',
-              padding: '0 0.5rem'
-            }}
-            aria-label="Fermer l'erreur"
-          >
-            ×
-          </button>
+        <div style={{
+          position: 'fixed',
+          top: '24px',
+          right: '24px',
+          background: 'rgba(239, 68, 68, 0.9)',
+          color: 'white',
+          padding: '16px 20px',
+          borderRadius: '8px',
+          border: '1px solid rgba(239, 68, 68, 0.5)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 1000,
+          animation: 'slideInRight 0.3s ease-out'
+        }} role="alert">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+            <span>{error}</span>
+            <button
+              onClick={() => setError(null)}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'white',
+                cursor: 'pointer',
+                padding: '4px',
+                borderRadius: '4px'
+              }}
+              aria-label="Fermer l'erreur"
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
     </div>
