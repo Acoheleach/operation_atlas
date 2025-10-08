@@ -79,23 +79,22 @@ export const MissionBrief: React.FC = () => {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        background: "#44bdff",
         padding: "20px",
         fontFamily: '"Poppins", sans-serif',
-        color: "#f8fafc",
+        color: "#1e293b",
       }}
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
         
         .dashboard-card {
-          background: rgba(30, 41, 59, 0.8);
-          border: 1px solid rgba(71, 85, 105, 0.5);
+          background: #FFFFFF;
+          border: 1px solid #e2e8f0;
           border-radius: 12px;
           padding: 24px;
           margin-bottom: 20px;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
         }
         
         .status-indicator {
@@ -106,24 +105,24 @@ export const MissionBrief: React.FC = () => {
         }
         
         .status-online { background: #10b981; }
-        .status-offline { background: #64748b; }
+        .status-offline { background: #94a3b8; }
         
         .server-card {
-          background: linear-gradient(135deg, rgba(30, 41, 59, 0.9) 0%, rgba(15, 23, 42, 0.9) 100%);
-          border: 1px solid rgba(71, 85, 105, 0.3);
+          background: #FFFFFF;
+          border: 1px solid #e2e8f0;
           border-radius: 8px;
           padding: 20px;
           transition: all 0.3s ease;
         }
         
         .server-card:hover {
-          border-color: #3b82f6;
+          border-color: #44bdff;
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+          box-shadow: 0 8px 25px rgba(68, 189, 255, 0.15);
         }
         
         .primary-button {
-          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+          background: linear-gradient(135deg, #44bdff 0%, #1d9bf0 100%);
           border: none;
           border-radius: 8px;
           padding: 16px 32px;
@@ -137,11 +136,12 @@ export const MissionBrief: React.FC = () => {
         
         .primary-button:hover:not(:disabled) {
           transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(220, 38, 38, 0.3);
+          box-shadow: 0 8px 25px rgba(68, 189, 255, 0.3);
         }
         
         .primary-button:disabled {
-          background: #475569;
+          background: #cbd5e1;
+          color: #64748b;
           cursor: not-allowed;
           transform: none;
         }
@@ -157,13 +157,12 @@ export const MissionBrief: React.FC = () => {
         }
       `}</style>
 
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1500px", margin: "0 auto" }}>
         {/* Header Principal */}
         <div
           className="dashboard-card"
           style={{
-            background: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
-            border: "1px solid #dc2626",
+            background: "#FFFFFF",
             position: "relative",
             overflow: "hidden",
           }}
@@ -176,7 +175,7 @@ export const MissionBrief: React.FC = () => {
               width: "200px",
               height: "200px",
               background:
-                "radial-gradient(circle, rgba(220, 38, 38, 0.1) 0%, transparent 70%)",
+                "radial-gradient(circle, rgba(68, 189, 255, 0.1) 0%, transparent 70%)",
               borderRadius: "50%",
             }}
           />
@@ -194,11 +193,7 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "2.5rem",
                   fontWeight: "800",
                   margin: "0 0 8px 0",
-                  background:
-                    "linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)",
-                  backgroundClip: "text",
-                  WebkitBackgroundClip: "text",
-                  color: "transparent",
+                  color: "#44bdff",
                   textTransform: "uppercase",
                   letterSpacing: "2px",
                 }}
@@ -208,7 +203,7 @@ export const MissionBrief: React.FC = () => {
               <div
                 style={{
                   fontSize: "1rem",
-                  color: "#94a3b8",
+                  color: "#64748b",
                   fontWeight: "500",
                   textTransform: "uppercase",
                   letterSpacing: "1px",
@@ -220,8 +215,8 @@ export const MissionBrief: React.FC = () => {
 
             <div
               style={{
-                background: "rgba(220, 38, 38, 0.1)",
-                border: "1px solid rgba(220, 38, 38, 0.3)",
+                background: "rgba(68, 189, 255, 0.1)",
+                border: "1px solid rgba(68, 189, 255, 0.3)",
                 borderRadius: "8px",
                 padding: "16px 24px",
                 textAlign: "center",
@@ -230,8 +225,9 @@ export const MissionBrief: React.FC = () => {
               <div
                 style={{
                   fontSize: "0.875rem",
-                  color: "#94a3b8",
+                  color: "#64748b",
                   marginBottom: "4px",
+                  fontWeight: "600",
                 }}
               >
                 TEMPS RESTANT
@@ -241,7 +237,7 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "2rem",
                   fontWeight: "700",
                   fontFamily: "monospace",
-                  color: timeLeft < 300 ? "#ef4444" : "#10b981",
+                  color: timeLeft < 300 ? "#ef4444" : "#059669",
                 }}
               >
                 {formatTime(timeLeft)}
@@ -263,9 +259,8 @@ export const MissionBrief: React.FC = () => {
             <div
               className="dashboard-card"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(220, 38, 38, 0.1) 0%, rgba(185, 28, 28, 0.05) 100%)",
-                border: "1px solid rgba(220, 38, 38, 0.3)",
+                background: "#FFFFFF",
+                border: "1px solid rgba(239, 68, 68, 0.3)",
               }}
             >
               <div
@@ -279,13 +274,14 @@ export const MissionBrief: React.FC = () => {
                   style={{
                     width: "32px",
                     height: "32px",
-                    background: "#dc2626",
+                    background: "#ef4444",
                     borderRadius: "50%",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     marginRight: "12px",
                     fontSize: "18px",
+                    color: "white",
                   }}
                 >
                   ⚠️
@@ -295,32 +291,36 @@ export const MissionBrief: React.FC = () => {
                     fontSize: "1.25rem",
                     fontWeight: "600",
                     margin: 0,
-                    color: "#f8fafc",
+                    color: "#ef4444",
                   }}
                 >
                   ALERTE CRITIQUE
                 </h2>
               </div>
 
-              <div style={{ lineHeight: "1.6", color: "#cbd5e1" }}>
+              <div style={{ lineHeight: "1.6", color: "#475569" }}>
                 <p style={{ marginBottom: "12px" }}>
-                  <strong style={{ color: "#dc2626" }}>S.H.A.D.O.W.</strong>{" "}
+                  <strong style={{ color: "#ef4444" }}>S.H.A.D.O.W.</strong>{" "}
                   (Sabotage of Heritage And Disruption Of Worldwide Culture)
                   menace de détruire le patrimoine culturel mondial !
                 </p>
                 <p style={{ marginBottom: "16px" }}>
-                  Le virus numérique <strong>"ATLAS-KILLER"</strong> s'activera
-                  dans <strong>{formatTime(timeLeft)}</strong> et effacera les
-                  archives de musées, bibliothèques et sites culturels de 3
-                  continents.
+                  Le virus numérique{" "}
+                  <strong style={{ color: "#dc2626" }}>"ATLAS-KILLER"</strong>{" "}
+                  s'activera dans{" "}
+                  <strong style={{ color: "#d97706" }}>
+                    {formatTime(timeLeft)}
+                  </strong>{" "}
+                  et effacera les archives de musées, bibliothèques et sites
+                  culturels de 3 continents.
                 </p>
 
                 <div
                   style={{
-                    background: "rgba(0, 0, 0, 0.3)",
+                    background: "rgba(68, 189, 255, 0.05)",
                     borderRadius: "8px",
                     padding: "16px",
-                    border: "1px solid rgba(71, 85, 105, 0.5)",
+                    border: "1px solid rgba(68, 189, 255, 0.2)",
                   }}
                 >
                   <h3
@@ -328,41 +328,43 @@ export const MissionBrief: React.FC = () => {
                       fontSize: "1rem",
                       fontWeight: "600",
                       margin: "0 0 12px 0",
-                      color: "#f8fafc",
+                      color: "#44bdff",
                     }}
                   >
                     OBJECTIF DE MISSION :
                   </h3>
                   <div style={{ display: "grid", gap: "8px" }}>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <div style={{ marginRight: "12px", color: "#3b82f6" }}>
+                      <div style={{ marginRight: "12px", color: "#44bdff" }}>
                         🔓
                       </div>
-                      <span>
+                      <span style={{ color: "#475569" }}>
                         Infiltrez les 3 serveurs continentaux de S.H.A.D.O.W.
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <div style={{ marginRight: "12px", color: "#3b82f6" }}>
+                      <div style={{ marginRight: "12px", color: "#44bdff" }}>
                         🧩
                       </div>
-                      <span>
+                      <span style={{ color: "#475569" }}>
                         Récupérez les fragments du mot de passe maître
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <div style={{ marginRight: "12px", color: "#3b82f6" }}>
+                      <div style={{ marginRight: "12px", color: "#44bdff" }}>
                         🔑
                       </div>
-                      <span>
+                      <span style={{ color: "#475569" }}>
                         Reconstituez la clé d'accès au serveur central
                       </span>
                     </div>
                     <div style={{ display: "flex", alignItems: "center" }}>
-                      <div style={{ marginRight: "12px", color: "#3b82f6" }}>
+                      <div style={{ marginRight: "12px", color: "#44bdff" }}>
                         ⚡
                       </div>
-                      <span>Désactivez le virus en 30 secondes chrono !</span>
+                      <span style={{ color: "#475569" }}>
+                        Désactivez le virus en 30 secondes chrono !
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -376,10 +378,14 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "1.5rem",
                   fontWeight: "600",
                   margin: "0 0 20px 0",
-                  color: "#f8fafc",
+                  color: "#44bdff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                🌍 SERVEURS CIBLES
+                <span>🌍</span>
+                SERVEURS CIBLES
               </h2>
 
               <div style={{ display: "grid", gap: "16px" }}>
@@ -409,6 +415,7 @@ export const MissionBrief: React.FC = () => {
                             alignItems: "center",
                             justifyContent: "center",
                             fontSize: "24px",
+                            color: "white",
                           }}
                         >
                           {continent.emoji}
@@ -419,7 +426,7 @@ export const MissionBrief: React.FC = () => {
                               fontSize: "1.125rem",
                               fontWeight: "600",
                               margin: "0 0 4px 0",
-                              color: "#f8fafc",
+                              color: "#1e293b",
                             }}
                           >
                             {continent.name}
@@ -427,7 +434,7 @@ export const MissionBrief: React.FC = () => {
                           <div
                             style={{
                               fontSize: "0.875rem",
-                              color: "#94a3b8",
+                              color: "#64748b",
                               marginBottom: "8px",
                             }}
                           >
@@ -442,22 +449,24 @@ export const MissionBrief: React.FC = () => {
                           >
                             <div
                               style={{
-                                background: "rgba(71, 85, 105, 0.3)",
+                                background: "rgba(100, 116, 139, 0.1)",
                                 padding: "4px 8px",
                                 borderRadius: "4px",
                                 fontSize: "0.75rem",
-                                color: "#cbd5e1",
+                                color: "#475569",
+                                fontWeight: "500",
                               }}
                             >
                               Difficulté: {continent.difficulty}
                             </div>
                             <div
                               style={{
-                                background: "rgba(59, 130, 246, 0.1)",
+                                background: "rgba(68, 189, 255, 0.1)",
                                 padding: "4px 8px",
                                 borderRadius: "4px",
                                 fontSize: "0.75rem",
-                                color: "#3b82f6",
+                                color: "#44bdff",
+                                fontWeight: "500",
                               }}
                             >
                               {continent.status}
@@ -481,10 +490,14 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "1.25rem",
                   fontWeight: "600",
                   margin: "0 0 16px 0",
-                  color: "#f8fafc",
+                  color: "#44bdff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                👥 ÉQUIPE ({room.players.length}/4)
+                <span>👥</span>
+                ÉQUIPE ({room.players.length}/4)
               </h2>
 
               <div style={{ display: "grid", gap: "12px" }}>
@@ -495,9 +508,13 @@ export const MissionBrief: React.FC = () => {
                       display: "flex",
                       alignItems: "center",
                       padding: "12px",
-                      background: "rgba(30, 41, 59, 0.6)",
+                      background: player.connected
+                        ? "rgba(16, 185, 129, 0.05)"
+                        : "rgba(100, 116, 139, 0.05)",
                       borderRadius: "8px",
-                      border: "1px solid rgba(71, 85, 105, 0.3)",
+                      border: player.connected
+                        ? "1px solid rgba(16, 185, 129, 0.2)"
+                        : "1px solid rgba(100, 116, 139, 0.2)",
                     }}
                   >
                     <div
@@ -506,11 +523,17 @@ export const MissionBrief: React.FC = () => {
                       }`}
                     />
                     <div style={{ flex: 1 }}>
-                      <div style={{ fontWeight: "500", color: "#f8fafc" }}>
+                      <div style={{ fontWeight: "500", color: "#1e293b" }}>
                         {player.pseudo}
                       </div>
-                      <div style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
-                        {player.connected ? "En ligne" : "Hors ligne"}
+                      <div
+                        style={{
+                          fontSize: "0.75rem",
+                          color: player.connected ? "#059669" : "#64748b",
+                          fontWeight: "500",
+                        }}
+                      >
+                        {player.connected ? "🟢 En ligne" : "⚫ Hors ligne"}
                       </div>
                     </div>
                   </div>
@@ -525,16 +548,20 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "1.25rem",
                   fontWeight: "600",
                   margin: "0 0 16px 0",
-                  color: "#f8fafc",
+                  color: "#44bdff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                🎯 CODE MISSION
+                <span>🎯</span>
+                CODE MISSION
               </h2>
 
               <div
                 style={{
-                  background: "rgba(15, 23, 42, 0.6)",
-                  border: "1px solid rgba(59, 130, 246, 0.3)",
+                  background: "rgba(68, 189, 255, 0.05)",
+                  border: "1px solid rgba(68, 189, 255, 0.3)",
                   borderRadius: "8px",
                   padding: "20px",
                   textAlign: "center",
@@ -545,7 +572,7 @@ export const MissionBrief: React.FC = () => {
                     fontSize: "2rem",
                     fontWeight: "700",
                     fontFamily: "monospace",
-                    color: "#3b82f6",
+                    color: "#44bdff",
                     letterSpacing: "4px",
                   }}
                 >
@@ -554,7 +581,7 @@ export const MissionBrief: React.FC = () => {
                 <div
                   style={{
                     fontSize: "0.875rem",
-                    color: "#94a3b8",
+                    color: "#64748b",
                     marginTop: "8px",
                   }}
                 >
@@ -567,9 +594,8 @@ export const MissionBrief: React.FC = () => {
             <div
               className="dashboard-card"
               style={{
-                background:
-                  "linear-gradient(135deg, rgba(59, 130, 246, 0.1) 0%, rgba(37, 99, 235, 0.05) 100%)",
-                border: "1px solid rgba(59, 130, 246, 0.3)",
+                background: "#FFF",
+                border: "1px solid rgba(68, 189, 255, 0.2)",
               }}
             >
               <h2
@@ -577,13 +603,17 @@ export const MissionBrief: React.FC = () => {
                   fontSize: "1.25rem",
                   fontWeight: "600",
                   margin: "0 0 12px 0",
-                  color: "#f8fafc",
+                  color: "#44bdff",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
                 }}
               >
-                💡 STRATÉGIE
+                <span>💡</span>
+                STRATÉGIE
               </h2>
 
-              <div style={{ color: "#cbd5e1", lineHeight: "1.5" }}>
+              <div style={{ color: "#475569", lineHeight: "1.5" }}>
                 Coordonnez-vous via le chat ! Chaque indice demandé coûte 60
                 secondes précieuses à votre mission.
               </div>

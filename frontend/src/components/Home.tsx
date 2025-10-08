@@ -36,7 +36,7 @@ export const Home: React.FC = () => {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        background: "#44bdff",
         padding: "24px",
         fontFamily: '"Poppins", sans-serif',
         color: "#f8fafc",
@@ -46,9 +46,9 @@ export const Home: React.FC = () => {
     >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
-        
+
         .dashboard-card {
-          background: rgba(30, 41, 59, 0.9);
+          background: #FFF;
           border: 1px solid rgba(71, 85, 105, 0.5);
           border-radius: 12px;
           padding: 32px;
@@ -56,10 +56,13 @@ export const Home: React.FC = () => {
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
           position: relative;
           z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
         }
         
         .primary-button {
-          background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+          background: #44BDFF;
           border: none;
           border-radius: 8px;
           padding: 16px 24px;
@@ -79,7 +82,7 @@ export const Home: React.FC = () => {
         
         .secondary-button {
           background: rgba(30, 41, 59, 0.8);
-          border: 1px solid rgba(71, 85, 105, 0.5);
+          border: none;
           border-radius: 8px;
           padding: 16px 24px;
           color: #f8fafc;
@@ -92,7 +95,7 @@ export const Home: React.FC = () => {
         }
         
         .secondary-button:hover {
-          border-color: #3b82f6;
+          border-color: #44bdff;
           transform: translateY(-2px);
         }
         
@@ -110,16 +113,16 @@ export const Home: React.FC = () => {
         }
         
         .input-field:focus {
-          border-color: #3b82f6;
+          border-color: #44bdff;
           box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
         }
         
         .mission-tag {
-          background: rgba(220, 38, 38, 0.1);
-          border: 1px solid rgba(220, 38, 38, 0.3);
+          background: #F29900;
+          border: 1px solid #F29900;
           border-radius: 20px;
           padding: 8px 16px;
-          color: #fca5a5;
+          color: #FFF;
           font-size: 0.875rem;
           font-weight: 600;
           display: inline-block;
@@ -162,7 +165,13 @@ export const Home: React.FC = () => {
       {/* Éléments flottants décoratifs */}
       <div
         className="floating-element"
-        style={{ top: "10%", left: "5%", width: "120px", height: "120px" }}
+        style={{
+          top: "10%",
+          left: "5%",
+          width: "120px",
+          height: "120px",
+          background: "#FFF",
+        }}
       />
       <div
         className="floating-element"
@@ -172,6 +181,7 @@ export const Home: React.FC = () => {
           width: "80px",
           height: "80px",
           animationDelay: "2s",
+          background: "#FFF",
         }}
       />
       <div
@@ -182,12 +192,13 @@ export const Home: React.FC = () => {
           width: "60px",
           height: "60px",
           animationDelay: "4s",
+          background: "#FFF",
         }}
       />
 
       <div
         style={{
-          maxWidth: "500px",
+          maxWidth: "50rem",
           margin: "0 auto",
           position: "relative",
           zIndex: 2,
@@ -214,12 +225,12 @@ export const Home: React.FC = () => {
                 background: "linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)",
                 backgroundClip: "text",
                 WebkitBackgroundClip: "text",
-                color: "transparent",
-                textTransform: "uppercase",
+                color: "#44bdff",
+
                 letterSpacing: "2px",
               }}
             >
-              OPÉRATION ATLAS
+              Opération Atlas
             </h1>
             <p
               style={{
@@ -342,7 +353,12 @@ export const Home: React.FC = () => {
           {/* Sélection du Mode */}
           {mode === null && (
             <div
-              style={{ display: "flex", flexDirection: "column", gap: "16px" }}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                gap: "16px",
+                width: "25rem",
+              }}
             >
               <button
                 onClick={() => setMode("create")}
@@ -564,7 +580,7 @@ export const Home: React.FC = () => {
 
         {/* Footer */}
         <div style={{ textAlign: "center", marginTop: "24px" }}>
-          <p style={{ fontSize: "0.75rem", color: "#64748b" }}>
+          <p style={{ fontSize: "0.75rem", color: "#FFF" }}>
             Système d'Infiltration S.H.A.D.O.W. • Sécurité Niveau Maximum
           </p>
         </div>

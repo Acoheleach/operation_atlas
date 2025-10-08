@@ -41,13 +41,19 @@ export const Debrief: React.FC = () => {
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
         
         .dashboard-card {
-          background: rgba(30, 41, 59, 0.8);
-          border: 1px solid rgba(71, 85, 105, 0.5);
-          border-radius: 12px;
-          padding: 24px;
-          margin-bottom: 24px;
-          backdrop-filter: blur(10px);
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+          background: rgba(30, 41, 59, 0.9);
+    border: 1px solid rgba(71, 85, 105, 0.5);
+    border-radius: 12px;
+    padding: 32px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
+    display: flex
+;
+    flex-direction: column;
+    align-items: center;
+          
         }
         
         .status-indicator {

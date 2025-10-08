@@ -1,45 +1,100 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useGameStore } from '../store/gameStore';
-import { GameStage } from '../types/game';
-import { Final } from './Final';
-import { Meta } from './Meta';
-import { PuzzleAfrica } from './PuzzleAfrica';
-import { PuzzleAmericas } from './PuzzleAmericas';
-import { PuzzleAntarctica } from './PuzzleAntarctica';
-import { PuzzleAsia } from './PuzzleAsia';
-import { PuzzleEurope } from './PuzzleEurope';
-import { PuzzleOceania } from './PuzzleOceania';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useGameStore } from "../store/gameStore";
+import { GameStage } from "../types/game";
+import { Final } from "./Final";
+import { Meta } from "./Meta";
+import { PuzzleAfrica } from "./PuzzleAfrica";
+import { PuzzleAmericas } from "./PuzzleAmericas";
+import { PuzzleAntarctica } from "./PuzzleAntarctica";
+import { PuzzleAsia } from "./PuzzleAsia";
+import { PuzzleEurope } from "./PuzzleEurope";
+import { PuzzleOceania } from "./PuzzleOceania";
 
-type Destination = 'EUROPE' | 'ASIA' | 'AMERICAS' | 'AFRICA' | 'OCEANIA' | 'ANTARCTICA' | 'META' | 'FINAL';
+type Destination =
+  | "EUROPE"
+  | "ASIA"
+  | "AMERICAS"
+  | "AFRICA"
+  | "OCEANIA"
+  | "ANTARCTICA"
+  | "META"
+  | "FINAL";
 
-const allContinentInfo: Record<string, { name: string; emoji: string; color: string; bg: string }> = {
-  EUROPE: { name: 'Europe', emoji: '🇪🇺', color: '#2563eb', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  ASIA: { name: 'Asie', emoji: '🌏', color: '#059669', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  AMERICAS: { name: 'Amériques', emoji: '✈️', color: '#d97706', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  AFRICA: { name: 'Afrique', emoji: '🌍', color: '#dc2626', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  OCEANIA: { name: 'Océanie', emoji: '🏝️', color: '#7c3aed', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  ANTARCTICA: { name: 'Antarctique', emoji: '🧊', color: '#0891b2', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  META: { name: 'Synthèse', emoji: '🧩', color: '#8b5cf6', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' },
-  FINAL: { name: 'Mission Finale', emoji: '🎯', color: '#dc2626', bg: 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' }
+const allContinentInfo: Record<
+  string,
+  { name: string; emoji: string; color: string; bg: string }
+> = {
+  EUROPE: {
+    name: "Europe",
+    emoji: "🇪🇺",
+    color: "#2563eb",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  ASIA: {
+    name: "Asie",
+    emoji: "🌏",
+    color: "#059669",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  AMERICAS: {
+    name: "Amériques",
+    emoji: "✈️",
+    color: "#d97706",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  AFRICA: {
+    name: "Afrique",
+    emoji: "🌍",
+    color: "#dc2626",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  OCEANIA: {
+    name: "Océanie",
+    emoji: "🏝️",
+    color: "#7c3aed",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  ANTARCTICA: {
+    name: "Antarctique",
+    emoji: "🧊",
+    color: "#0891b2",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  META: {
+    name: "Synthèse",
+    emoji: "🧩",
+    color: "#8b5cf6",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
+  FINAL: {
+    name: "Mission Finale",
+    emoji: "🎯",
+    color: "#dc2626",
+    bg: "linear-gradient(135deg, #1e293b 0%, #0f172a 100%)",
+  },
 };
 
 export const GameJourney: React.FC = () => {
-  const { room, chatMessages, sendChat, notification, error, setError } = useGameStore();
-  const [currentDestination, setCurrentDestination] = useState<Destination | null>(null);
-  const [nextDestination, setNextDestination] = useState<Destination | null>(null);
-  const [chatInput, setChatInput] = useState('');
+  const { room, chatMessages, sendChat, notification, error, setError } =
+    useGameStore();
+  const [currentDestination, setCurrentDestination] =
+    useState<Destination | null>(null);
+  const [nextDestination, setNextDestination] = useState<Destination | null>(
+    null
+  );
+  const [chatInput, setChatInput] = useState("");
   const [showTransition, setShowTransition] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (!room) {
-      navigate('/');
+      navigate("/");
       return;
     }
 
     if (room.stage === GameStage.DEBRIEF) {
-      navigate('/debrief');
+      navigate("/debrief");
     }
   }, [room, navigate]);
 
@@ -47,12 +102,12 @@ export const GameJourney: React.FC = () => {
     if (!room || !room.draw || room.draw.length === 0) return;
 
     if (room.stage === GameStage.META) {
-      if (currentDestination !== 'META') {
-        triggerTransition('META');
+      if (currentDestination !== "META") {
+        triggerTransition("META");
       }
     } else if (room.stage === GameStage.FINAL) {
-      if (currentDestination !== 'FINAL') {
-        triggerTransition('FINAL');
+      if (currentDestination !== "FINAL") {
+        triggerTransition("FINAL");
       }
     } else if (room.stage === GameStage.PLAY) {
       const drawnContinents = room.draw as Destination[];
@@ -89,22 +144,22 @@ export const GameJourney: React.FC = () => {
     e.preventDefault();
     if (!chatInput.trim()) return;
     sendChat(chatInput);
-    setChatInput('');
+    setChatInput("");
   };
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const destinations = [
-    ...(room.draw || []).map(continent => ({
+    ...(room.draw || []).map((continent) => ({
       id: continent,
-      ...allContinentInfo[continent]
+      ...allContinentInfo[continent],
     })),
-    { id: 'META', ...allContinentInfo.META },
-    { id: 'FINAL', ...allContinentInfo.FINAL }
+    { id: "META", ...allContinentInfo.META },
+    { id: "FINAL", ...allContinentInfo.FINAL },
   ];
 
   const currentDest = allContinentInfo[currentDestination];
@@ -114,21 +169,22 @@ export const GameJourney: React.FC = () => {
   }).length;
 
   let currentPosition = completedCount + 1;
-  if (currentDestination === 'META') {
+  if (currentDestination === "META") {
     currentPosition = 4;
-  } else if (currentDestination === 'FINAL') {
+  } else if (currentDestination === "FINAL") {
     currentPosition = 5;
   }
 
   return (
-    <div style={{
-      minHeight: '100vh',
-      background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)',
-      padding: '24px',
-      fontFamily: '"Poppins", sans-serif',
-      color: '#f8fafc'
-    }}>
-      
+    <div
+      style={{
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #0f172a 0%, #1e293b 100%)",
+        padding: "24px",
+        fontFamily: '"Poppins", sans-serif',
+        color: "#f8fafc",
+      }}
+    >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap');
         
@@ -262,90 +318,120 @@ export const GameJourney: React.FC = () => {
 
       {/* Transition Overlay */}
       {showTransition && nextDestination && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          background: 'rgba(15, 23, 42, 0.95)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 9999,
-          fontFamily: '"Poppins", sans-serif'
-        }}>
-          <div style={{ textAlign: 'center', color: 'white' }}>
-            <div style={{ fontSize: '4rem', marginBottom: '1rem' }}>
+        <div
+          style={{
+            position: "fixed",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            background: "rgba(15, 23, 42, 0.95)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 9999,
+            fontFamily: '"Poppins", sans-serif',
+          }}
+        >
+          <div style={{ textAlign: "center", color: "white" }}>
+            <div style={{ fontSize: "4rem", marginBottom: "1rem" }}>
               {allContinentInfo[nextDestination]?.emoji}
             </div>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.5rem', color: '#94a3b8' }}>
+            <h2
+              style={{
+                fontSize: "1.5rem",
+                marginBottom: "0.5rem",
+                color: "#94a3b8",
+              }}
+            >
               Transition de mission
             </h2>
-            <h1 style={{ 
-              fontSize: '2.5rem', 
-              fontWeight: '700',
-              background: 'linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)',
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              color: 'transparent'
-            }}>
+            <h1
+              style={{
+                fontSize: "2.5rem",
+                fontWeight: "700",
+                background: "linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%)",
+                backgroundClip: "text",
+                WebkitBackgroundClip: "text",
+                color: "transparent",
+              }}
+            >
               {allContinentInfo[nextDestination]?.name}
             </h1>
           </div>
         </div>
       )}
 
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        
+      <div style={{ maxWidth: "1400px", margin: "0 auto" }}>
         {/* Header avec Progression */}
         <div className="dashboard-card">
-          <div className="flex-between" style={{ flexWrap: 'wrap', gap: '24px' }}>
+          <div
+            className="flex-between"
+            style={{ flexWrap: "wrap", gap: "24px" }}
+          >
             <div>
-              <h1 style={{
-                fontSize: '1.75rem',
-                fontWeight: '700',
-                margin: '0 0 8px 0',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '12px'
-              }}>
-                <span style={{ fontSize: '2rem' }}>{currentDest.emoji}</span>
+              <h1
+                style={{
+                  fontSize: "1.75rem",
+                  fontWeight: "700",
+                  margin: "0 0 8px 0",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "12px",
+                }}
+              >
+                <span style={{ fontSize: "2rem" }}>{currentDest.emoji}</span>
                 {currentDest.name}
               </h1>
-              <div style={{ fontSize: '0.875rem', color: '#94a3b8' }}>
+              <div style={{ fontSize: "0.875rem", color: "#94a3b8" }}>
                 Phase {currentPosition} sur 5 • Opération Atlas
               </div>
             </div>
 
             {/* Timer */}
-            <div style={{
-              background: 'rgba(15, 23, 42, 0.6)',
-              border: '1px solid rgba(71, 85, 105, 0.5)',
-              borderRadius: '8px',
-              padding: '16px 20px',
-              textAlign: 'center'
-            }}>
-              <div style={{ fontSize: '0.875rem', color: '#94a3b8', fontWeight: '600', marginBottom: '4px' }}>
+            <div
+              style={{
+                background: "rgba(15, 23, 42, 0.6)",
+                border: "1px solid rgba(71, 85, 105, 0.5)",
+                borderRadius: "8px",
+                padding: "16px 20px",
+                textAlign: "center",
+              }}
+            >
+              <div
+                style={{
+                  fontSize: "0.875rem",
+                  color: "#94a3b8",
+                  fontWeight: "600",
+                  marginBottom: "4px",
+                }}
+              >
                 TEMPS RESTANT
               </div>
-              <div style={{ 
-                fontSize: '1.75rem', 
-                fontWeight: '700',
-                fontFamily: 'monospace',
-                color: room.timerSec < 60 ? '#ef4444' : room.timerSec < 300 ? '#f59e0b' : '#10b981'
-              }}>
+              <div
+                style={{
+                  fontSize: "1.75rem",
+                  fontWeight: "700",
+                  fontFamily: "monospace",
+                  color:
+                    room.timerSec < 60
+                      ? "#ef4444"
+                      : room.timerSec < 300
+                      ? "#f59e0b"
+                      : "#10b981",
+                }}
+              >
                 {formatTime(room.timerSec)}
               </div>
             </div>
 
             {/* Barre de Progression */}
-            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
               {destinations.map((dest, idx) => {
                 let isCompleted = false;
                 let isActive = currentDestination === dest.id;
-                
-                if (dest.id === 'META' || dest.id === 'FINAL') {
+
+                if (dest.id === "META" || dest.id === "FINAL") {
                   isCompleted = false;
                 } else {
                   const continentKey = dest.id.toLowerCase().substring(0, 2);
@@ -355,14 +441,24 @@ export const GameJourney: React.FC = () => {
                 return (
                   <div
                     key={dest.id}
-                    className={`progress-step ${isActive ? 'active' : ''} ${isCompleted ? 'completed' : ''}`}
+                    className={`progress-step ${isActive ? "active" : ""} ${
+                      isCompleted ? "completed" : ""
+                    }`}
                     title={dest.name}
                     style={{
-                      background: isCompleted ? '#10b981' : isActive ? dest.color : 'transparent',
-                      color: isCompleted ? 'white' : isActive ? 'white' : '#94a3b8'
+                      background: isCompleted
+                        ? "#10b981"
+                        : isActive
+                        ? dest.color
+                        : "transparent",
+                      color: isCompleted
+                        ? "white"
+                        : isActive
+                        ? "white"
+                        : "#94a3b8",
                     }}
                   >
-                    {isCompleted ? '✓' : dest.emoji}
+                    {isCompleted ? "✓" : dest.emoji}
                   </div>
                 );
               })}
@@ -373,52 +469,68 @@ export const GameJourney: React.FC = () => {
         {/* Contenu Principal */}
         <div className="grid-2-col">
           <div>
-            {currentDestination === 'EUROPE' && <PuzzleEurope />}
-            {currentDestination === 'ASIA' && <PuzzleAsia />}
-            {currentDestination === 'AMERICAS' && <PuzzleAmericas />}
-            {currentDestination === 'AFRICA' && <PuzzleAfrica />}
-            {currentDestination === 'OCEANIA' && <PuzzleOceania />}
-            {currentDestination === 'ANTARCTICA' && <PuzzleAntarctica />}
-            {currentDestination === 'META' && <Meta />}
-            {currentDestination === 'FINAL' && <Final />}
+            {currentDestination === "EUROPE" && <PuzzleEurope />}
+            {currentDestination === "ASIA" && <PuzzleAsia />}
+            {currentDestination === "AMERICAS" && <PuzzleAmericas />}
+            {currentDestination === "AFRICA" && <PuzzleAfrica />}
+            {currentDestination === "OCEANIA" && <PuzzleOceania />}
+            {currentDestination === "ANTARCTICA" && <PuzzleAntarctica />}
+            {currentDestination === "META" && <Meta />}
+            {currentDestination === "FINAL" && <Final />}
           </div>
 
           {/* Sidebar */}
           <div>
             {/* Équipe */}
             <div className="dashboard-card">
-              <h3 style={{
-                fontSize: '1.125rem',
-                fontWeight: '600',
-                margin: '0 0 16px 0',
-                color: '#f8fafc',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
+              <h3
+                style={{
+                  fontSize: "1.125rem",
+                  fontWeight: "600",
+                  margin: "0 0 16px 0",
+                  color: "#44BDFF",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
                 👥 ÉQUIPE ({room.players.length}/4)
               </h3>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+              <div
+                style={{ display: "flex", flexDirection: "column", gap: "8px" }}
+              >
                 {room.players.map((player) => (
                   <div
                     key={player.id}
                     className="server-tag"
                     style={{
-                      background: player.connected ? 'rgba(16, 185, 129, 0.1)' : 'rgba(71, 85, 105, 0.3)',
-                      borderColor: player.connected ? 'rgba(16, 185, 129, 0.3)' : 'rgba(71, 85, 105, 0.5)',
-                      opacity: player.connected ? 1 : 0.6
+                      background: player.connected
+                        ? "rgba(16, 185, 129, 0.1)"
+                        : "rgba(71, 85, 105, 0.3)",
+                      borderColor: player.connected
+                        ? "rgba(16, 185, 129, 0.3)"
+                        : "rgba(71, 85, 105, 0.5)",
+                      opacity: player.connected ? 1 : 0.6,
                     }}
                   >
-                    <div style={{
-                      width: '8px',
-                      height: '8px',
-                      borderRadius: '50%',
-                      background: player.connected ? '#10b981' : '#64748b',
-                      marginRight: '8px'
-                    }} />
+                    <div
+                      style={{
+                        width: "8px",
+                        height: "8px",
+                        borderRadius: "50%",
+                        background: player.connected ? "#10b981" : "#64748b",
+                        marginRight: "8px",
+                      }}
+                    />
                     {player.pseudo}
                     {!player.connected && (
-                      <span style={{ marginLeft: 'auto', fontSize: '0.75rem', color: '#94a3b8' }}>
+                      <span
+                        style={{
+                          marginLeft: "auto",
+                          fontSize: "0.75rem",
+                          color: "#94a3b8",
+                        }}
+                      >
                         hors ligne
                       </span>
                     )}
@@ -429,43 +541,48 @@ export const GameJourney: React.FC = () => {
 
             {/* Chat */}
             <div className="dashboard-card">
-              <h3 style={{
-                fontSize: '1.125rem',
-                fontWeight: '600',
-                margin: '0 0 16px 0',
-                color: '#f8fafc',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
-              }}>
+              <h3
+                style={{
+                  fontSize: "1.125rem",
+                  fontWeight: "600",
+                  margin: "0 0 16px 0",
+                  color: "#f8fafc",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "8px",
+                }}
+              >
                 💬 COMMUNICATION
               </h3>
-              
+
               <div
                 style={{
-                  height: '300px',
-                  overflowY: 'auto',
-                  background: 'rgba(15, 23, 42, 0.6)',
-                  border: '1px solid rgba(71, 85, 105, 0.3)',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  marginBottom: '16px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '12px'
+                  height: "300px",
+                  overflowY: "auto",
+                  background: "rgba(15, 23, 42, 0.6)",
+                  border: "1px solid rgba(71, 85, 105, 0.3)",
+                  borderRadius: "8px",
+                  padding: "16px",
+                  marginBottom: "16px",
+                  display: "flex",
+                  flexDirection: "column",
+                  gap: "12px",
                 }}
                 role="log"
                 aria-live="polite"
               >
                 {chatMessages.map((msg, i) => (
-                  <div key={i} style={{ fontSize: '0.875rem' }}>
-                    <strong style={{ color: '#3b82f6' }}>{msg.pseudo}:</strong>{' '}
-                    <span style={{ color: '#cbd5e1' }}>{msg.message}</span>
+                  <div key={i} style={{ fontSize: "0.875rem" }}>
+                    <strong style={{ color: "#3b82f6" }}>{msg.pseudo}:</strong>{" "}
+                    <span style={{ color: "#cbd5e1" }}>{msg.message}</span>
                   </div>
                 ))}
               </div>
 
-              <form onSubmit={handleSendChat} style={{ display: 'flex', gap: '8px' }}>
+              <form
+                onSubmit={handleSendChat}
+                style={{ display: "flex", gap: "8px" }}
+              >
                 <input
                   type="text"
                   value={chatInput}
@@ -475,11 +592,11 @@ export const GameJourney: React.FC = () => {
                   className="chat-input"
                   aria-label="Message de chat"
                 />
-                <button 
-                  type="submit" 
-                  disabled={!chatInput.trim()} 
+                <button
+                  type="submit"
+                  disabled={!chatInput.trim()}
                   className="primary-button"
-                  style={{ minWidth: '60px' }}
+                  style={{ minWidth: "60px" }}
                 >
                   →
                 </button>
@@ -491,48 +608,61 @@ export const GameJourney: React.FC = () => {
 
       {/* Notifications */}
       {notification && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          right: '24px',
-          background: 'rgba(16, 185, 129, 0.9)',
-          color: 'white',
-          padding: '16px 20px',
-          borderRadius: '8px',
-          border: '1px solid rgba(16, 185, 129, 0.5)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 1000,
-          animation: 'slideInRight 0.3s ease-out'
-        }} role="alert">
+        <div
+          style={{
+            position: "fixed",
+            top: "24px",
+            right: "24px",
+            background: "rgba(16, 185, 129, 0.9)",
+            color: "white",
+            padding: "16px 20px",
+            borderRadius: "8px",
+            border: "1px solid rgba(16, 185, 129, 0.5)",
+            backdropFilter: "blur(10px)",
+            zIndex: 1000,
+            animation: "slideInRight 0.3s ease-out",
+          }}
+          role="alert"
+        >
           {notification}
         </div>
       )}
 
       {error && (
-        <div style={{
-          position: 'fixed',
-          top: '24px',
-          right: '24px',
-          background: 'rgba(239, 68, 68, 0.9)',
-          color: 'white',
-          padding: '16px 20px',
-          borderRadius: '8px',
-          border: '1px solid rgba(239, 68, 68, 0.5)',
-          backdropFilter: 'blur(10px)',
-          zIndex: 1000,
-          animation: 'slideInRight 0.3s ease-out'
-        }} role="alert">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '16px' }}>
+        <div
+          style={{
+            position: "fixed",
+            top: "24px",
+            right: "24px",
+            background: "rgba(239, 68, 68, 0.9)",
+            color: "white",
+            padding: "16px 20px",
+            borderRadius: "8px",
+            border: "1px solid rgba(239, 68, 68, 0.5)",
+            backdropFilter: "blur(10px)",
+            zIndex: 1000,
+            animation: "slideInRight 0.3s ease-out",
+          }}
+          role="alert"
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: "16px",
+            }}
+          >
             <span>{error}</span>
             <button
               onClick={() => setError(null)}
               style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'white',
-                cursor: 'pointer',
-                padding: '4px',
-                borderRadius: '4px'
+                background: "transparent",
+                border: "none",
+                color: "white",
+                cursor: "pointer",
+                padding: "4px",
+                borderRadius: "4px",
               }}
               aria-label="Fermer l'erreur"
             >
