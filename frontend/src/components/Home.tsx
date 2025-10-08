@@ -39,7 +39,7 @@ export const Home: React.FC = () => {
         background: "#44bdff",
         padding: "24px",
         fontFamily: '"Poppins", sans-serif',
-        color: "#f8fafc",
+        color: "#FFF",
         position: "relative",
         overflow: "hidden",
       }}
@@ -215,7 +215,11 @@ export const Home: React.FC = () => {
                 filter: "drop-shadow(0 0 20px rgba(59, 130, 246, 0.3))",
               }}
             >
-              🗺️
+              <img
+                src="logo-opération-cadenas.png"
+                alt=""
+                style={{ width: "6rem" }}
+              />
             </div>
             <h1
               style={{

@@ -26,6 +26,10 @@ export const PuzzleAntarctica: React.FC = () => {
   const { room, submitPuzzle, requestHint } = useGameStore();
   const [answer, setAnswer] = useState("");
   const [data, setData] = useState<AntarcticaData | null>(null);
+  const currentPuzzleIndex = useGameStore((state) => state.currentPuzzleIndex);
+  const setCurrentPuzzleIndex = useGameStore(
+    (state) => state.setCurrentPuzzleIndex
+  );
 
   useEffect(() => {
     fetch("/content/an_stations.json")
@@ -43,6 +47,12 @@ export const PuzzleAntarctica: React.FC = () => {
     e.preventDefault();
     if (!answer.trim()) return;
     submitPuzzle("ANTARCTICA", answer);
+
+    // Vérifie si la réponse est correcte (adapte selon ta logique)
+    if (answer === data?.correctAnswer.toUpperCase()) {
+      setCurrentPuzzleIndex(currentPuzzleIndex + 1);
+      // Tu peux aussi envoyer la progression au backend ici si besoin
+    }
   };
 
   const handleHint = () => {

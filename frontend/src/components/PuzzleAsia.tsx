@@ -18,6 +18,10 @@ export const PuzzleAsia: React.FC = () => {
   const { room, submitPuzzle, requestHint } = useGameStore();
   const [answer, setAnswer] = useState("");
   const [data, setData] = useState<AsiaData | null>(null);
+  const currentPuzzleIndex = useGameStore((state) => state.currentPuzzleIndex);
+  const setCurrentPuzzleIndex = useGameStore(
+    (state) => state.setCurrentPuzzleIndex
+  );
 
   useEffect(() => {
     fetch("/content/as_time.json")
@@ -35,6 +39,12 @@ export const PuzzleAsia: React.FC = () => {
     e.preventDefault();
     if (!answer.trim()) return;
     submitPuzzle("ASIA", answer);
+
+    // Vérifie si la réponse est correcte (adapte selon ta logique)
+    if (data?.validSlotsUTC.includes(answer)) {
+      setCurrentPuzzleIndex(currentPuzzleIndex + 1);
+      // Tu peux aussi envoyer la progression au backend ici si besoin
+    }
   };
 
   const handleHint = () => {

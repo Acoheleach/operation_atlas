@@ -22,6 +22,10 @@ export const PuzzleAfrica: React.FC = () => {
   const { room, submitPuzzle, requestHint } = useGameStore();
   const [answer, setAnswer] = useState("");
   const [data, setData] = useState<AfricaData | null>(null);
+  const currentPuzzleIndex = useGameStore((state) => state.currentPuzzleIndex);
+  const setCurrentPuzzleIndex = useGameStore(
+    (state) => state.setCurrentPuzzleIndex
+  );
 
   useEffect(() => {
     fetch("/content/af_currencies.json")
@@ -39,6 +43,13 @@ export const PuzzleAfrica: React.FC = () => {
     e.preventDefault();
     if (!answer.trim()) return;
     submitPuzzle("AFRICA", answer);
+
+    // Vérifie si la réponse est correcte (à adapter selon ta logique)
+    if (answer === String(data?.expectedFinalAmount)) {
+      // Passe à l’énigme suivante
+      setCurrentPuzzleIndex(currentPuzzleIndex + 1);
+      // Tu peux aussi envoyer la progression au backend ici si besoin
+    }
   };
 
   const handleHint = () => {

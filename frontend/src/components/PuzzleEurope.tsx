@@ -17,9 +17,18 @@ interface EuropeData {
 
 export const PuzzleEurope: React.FC = () => {
   const { room, submitPuzzle, requestHint } = useGameStore();
+  const currentPuzzleIndex = useGameStore((state) => state.currentPuzzleIndex);
+  const setCurrentPuzzleIndex = useGameStore(
+    (state) => state.setCurrentPuzzleIndex
+  );
+
   const [answer, setAnswer] = useState("");
   const [data, setData] = useState<EuropeData | null>(null);
+  const [localSolved, setLocalSolved] = useState(false);
+  const [localHintsUsed, setLocalHintsUsed] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Charger les données du puzzle
   useEffect(() => {
     fetch("/content/eu_salutations.json")
       .then((res) => res.json())
@@ -27,19 +36,65 @@ export const PuzzleEurope: React.FC = () => {
       .catch((err) => console.error("Failed to load Europe data:", err));
   }, []);
 
-  if (!room || !data) return null;
+  // Synchroniser l'état local avec les mises à jour WebSocket
+  useEffect(() => {
+    if (room) {
+      console.log("🔄 PuzzleEurope - Room updated:", {
+        solved: room.solved.eu,
+        hintsUsed: room.hintsUsed.eu,
+        version: room.version,
+      });
 
-  const solved = room.solved.eu || false;
-  const hintsUsed = room.hintsUsed.eu || 0;
+      setLocalSolved(room.solved.eu || false);
+      setLocalHintsUsed(room.hintsUsed.eu || 0);
+    }
+  }, [room?.solved.eu, room?.hintsUsed.eu, room?.version]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  if (!room || !data) {
+    return (
+      <div
+        style={{
+          background: "#FFFFFF",
+          border: "1px solid #e2e8f0",
+          borderRadius: "12px",
+          padding: "24px",
+          marginBottom: "24px",
+          textAlign: "center",
+          fontFamily: '"Poppins", sans-serif',
+        }}
+      >
+        <div style={{ fontSize: "2rem", marginBottom: "1rem" }}>⏳</div>
+        <p style={{ color: "#64748b" }}>Chargement du puzzle Europe...</p>
+      </div>
+    );
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!answer.trim()) return;
-    submitPuzzle("EUROPE", answer);
+    if (!answer.trim() || answer.length !== 5 || isSubmitting) return;
+
+    console.log("🎯 Submitting Europe puzzle answer:", answer);
+    setIsSubmitting(true);
+
+    try {
+      await submitPuzzle("EUROPE", answer);
+      setAnswer(""); // Reset du champ après soumission
+
+      // Vérifie si la réponse est correcte (adapte selon ta logique)
+      if (answer === data?.targetWord.toUpperCase()) {
+        setCurrentPuzzleIndex(currentPuzzleIndex + 1);
+        // Tu peux aussi envoyer la progression au backend ici si besoin
+      }
+    } catch (error) {
+      console.error("❌ Error submitting puzzle:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleHint = () => {
-    if (hintsUsed < 2) {
+    if (localHintsUsed < 2) {
+      console.log("💡 Requesting hint for Europe");
       requestHint("EUROPE");
     }
   };
@@ -93,7 +148,7 @@ export const PuzzleEurope: React.FC = () => {
             Trouvez le mot de 5 lettres en analysant les familles linguistiques
           </p>
         </div>
-        {solved && (
+        {localSolved && (
           <div
             style={{
               marginLeft: "auto",
@@ -111,7 +166,7 @@ export const PuzzleEurope: React.FC = () => {
         )}
       </div>
 
-      {!solved && (
+      {!localSolved ? (
         <>
           <div
             style={{
@@ -356,6 +411,7 @@ export const PuzzleEurope: React.FC = () => {
               onChange={(e) => setAnswer(e.target.value.toUpperCase())}
               placeholder="Mot (5 lettres)"
               maxLength={5}
+              disabled={isSubmitting}
               style={{
                 flex: 1,
                 padding: "12px 16px",
@@ -366,6 +422,7 @@ export const PuzzleEurope: React.FC = () => {
                 transition: "all 0.3s ease",
                 fontFamily: '"Poppins", sans-serif',
                 textTransform: "uppercase",
+                background: isSubmitting ? "#f8fafc" : "#FFFFFF",
               }}
               onFocus={(e) => (e.target.style.borderColor = "#EF4444")}
               onBlur={(e) => (e.target.style.borderColor = "#e2e8f0")}
@@ -373,76 +430,81 @@ export const PuzzleEurope: React.FC = () => {
             />
             <button
               type="submit"
-              disabled={answer.length !== 5}
+              disabled={answer.length !== 5 || isSubmitting}
               style={{
                 padding: "12px 24px",
                 background:
-                  answer.length !== 5
+                  answer.length !== 5 || isSubmitting
                     ? "#cbd5e1"
                     : "linear-gradient(135deg, #EF4444 0%, #DC2626 100%)",
                 color: "white",
                 border: "none",
                 borderRadius: "8px",
                 fontWeight: "600",
-                cursor: answer.length !== 5 ? "not-allowed" : "pointer",
+                cursor:
+                  answer.length !== 5 || isSubmitting
+                    ? "not-allowed"
+                    : "pointer",
                 transition: "all 0.3s ease",
                 fontFamily: '"Poppins", sans-serif',
               }}
               onMouseEnter={(e) => {
-                if (answer.length === 5) {
+                if (answer.length === 5 && !isSubmitting) {
                   e.currentTarget.style.transform = "translateY(-2px)";
                   e.currentTarget.style.boxShadow =
                     "0 8px 25px rgba(239, 68, 68, 0.3)";
                 }
               }}
               onMouseLeave={(e) => {
-                if (answer.length === 5) {
+                if (answer.length === 5 && !isSubmitting) {
                   e.currentTarget.style.transform = "translateY(0)";
                   e.currentTarget.style.boxShadow = "none";
                 }
               }}
             >
-              Valider
+              {isSubmitting ? "⏳..." : "Valider"}
             </button>
           </form>
 
           <button
             onClick={handleHint}
-            disabled={hintsUsed >= 2}
+            disabled={localHintsUsed >= 2 || isSubmitting}
             style={{
               width: "100%",
               padding: "12px 24px",
-              background: hintsUsed >= 2 ? "#e2e8f0" : "rgba(255, 193, 7, 0.1)",
-              color: hintsUsed >= 2 ? "#94a3b8" : "#d97706",
+              background:
+                localHintsUsed >= 2 ? "#e2e8f0" : "rgba(255, 193, 7, 0.1)",
+              color: localHintsUsed >= 2 ? "#94a3b8" : "#d97706",
               border: `1px solid ${
-                hintsUsed >= 2 ? "#cbd5e1" : "rgba(255, 193, 7, 0.3)"
+                localHintsUsed >= 2 ? "#cbd5e1" : "rgba(255, 193, 7, 0.3)"
               }`,
               borderRadius: "8px",
               fontWeight: "600",
-              cursor: hintsUsed >= 2 ? "not-allowed" : "pointer",
+              cursor:
+                localHintsUsed >= 2 || isSubmitting ? "not-allowed" : "pointer",
               transition: "all 0.3s ease",
               fontFamily: '"Poppins", sans-serif',
             }}
             onMouseEnter={(e) => {
-              if (hintsUsed < 2) {
+              if (localHintsUsed < 2 && !isSubmitting) {
                 e.currentTarget.style.transform = "translateY(-2px)";
                 e.currentTarget.style.boxShadow =
                   "0 4px 12px rgba(255, 193, 7, 0.2)";
               }
             }}
             onMouseLeave={(e) => {
-              if (hintsUsed < 2) {
+              if (localHintsUsed < 2 && !isSubmitting) {
                 e.currentTarget.style.transform = "translateY(0)";
                 e.currentTarget.style.boxShadow = "none";
               }
             }}
           >
-            {hintsUsed === 0 && "💡 Demander un indice (-60s)"}
-            {hintsUsed === 1 && "💡 Demander le 2e indice (-60s)"}
-            {hintsUsed >= 2 && "⚠️ Indices épuisés"}
+            {localHintsUsed === 0 && "💡 Demander un indice (-60s)"}
+            {localHintsUsed === 1 && "💡 Demander le 2e indice (-60s)"}
+            {localHintsUsed >= 2 && "⚠️ Indices épuisés"}
           </button>
 
-          {hintsUsed > 0 && (
+          {localHintsUsed > 0 && (
             <div
               style={{
                 marginTop: "1rem",
@@ -458,9 +520,7 @@ export const PuzzleEurope: React.FC = () => {
             </div>
           )}
         </>
-      )}
-
-      {solved && (
+      ) : (
         <div
           style={{
             padding: "1.5rem",
@@ -503,7 +563,7 @@ export const PuzzleEurope: React.FC = () => {
                 fontSize: "1.5rem",
               }}
             >
-              {room.fragments.letterEU}
+              {room.fragments.letterEU || "L"}
             </span>
           </div>
         </div>

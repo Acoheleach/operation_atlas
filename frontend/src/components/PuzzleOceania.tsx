@@ -28,6 +28,11 @@ export const PuzzleOceania: React.FC = () => {
   const [answer, setAnswer] = useState("");
   const [data, setData] = useState<OceaniaData | null>(null);
 
+  const currentPuzzleIndex = useGameStore((state) => state.currentPuzzleIndex);
+  const setCurrentPuzzleIndex = useGameStore(
+    (state) => state.setCurrentPuzzleIndex
+  );
+
   useEffect(() => {
     fetch("/content/oc_islands.json")
       .then((res) => res.json())
@@ -44,6 +49,12 @@ export const PuzzleOceania: React.FC = () => {
     e.preventDefault();
     if (!answer.trim()) return;
     submitPuzzle("OCEANIA", answer);
+
+    // Vérifie si la réponse est correcte (adapte selon ta logique)
+    if (answer.toUpperCase() === data?.correctRoute.toUpperCase()) {
+      setCurrentPuzzleIndex(currentPuzzleIndex + 1);
+      // Tu peux aussi envoyer la progression au backend ici si besoin
+    }
   };
 
   const handleHint = () => {
